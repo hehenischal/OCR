@@ -7,9 +7,17 @@
         <input type="file" name="image">
         <button type="submit">Extract Text</button>
     </form>
+    {% if context %}
+        <h3>Context:</h3>
+        <h3>sent image: </h3>
+        <img src="{{ image.url }}" alt="image" width="500" height="600">
+    {% endif %}
+    {% if extracted_text %}
+        <h3>Extracted Text:</h3>
+        <pre>{{ extracted_text }}</pre>
+    {% endif %}
     
-    {% if text %}
-    <h3>Extracted Text:</h3>
-    <pre>{{ text }}</pre>
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
     {% endif %}
 {% endblock %}
