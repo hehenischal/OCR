@@ -1,23 +1,150 @@
 {% extends "base.html" %}
 
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+    textarea {
+        width: 800px;
+    }
+    img {
+        width: 800px;
+    }
+</style>
+
 {% block content %}
-    <h2>Upload an Image for OCR</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="image">
-        <button type="submit">Extract Text</button>
-    </form>
-    {% if context %}
-        <h3>Context:</h3>
-        <h3>sent image: </h3>
-        <img src="{{ image.url }}" alt="image" width="500" height="600">
-    {% endif %}
-    {% if extracted_text %}
+{% if form %}
+    <div class="container">
+        <h2>Upload an Image for OCR</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+{% endif %}
+
+{% if extracted_text %}
+    <div class="container">
         <h3>Extracted Text:</h3>
-        <pre>{{ extracted_text }}</pre>
-    {% endif %}
-    
-    {% if error_message %}
+        <img src={{ form.image.url }} alt={{form.image.url}} width="500" height="200">
+        <p> image url : {{form.image.url}} </p>
+        
+    </div>
+    <div class="container">
+        <h1>Text Form</h1>
+        <div class="mb-3">
+            <textarea id="myBox" class="form-control" cols="100">{{ extracted_text }}</textarea>
+        </div>
+        <button class="btn btn-primary mx-1" onclick="handleUpClick()">Convert to Uppercase</button>
+        <button class="btn btn-primary mx-1" onclick="handleLoClick()">Convert to Lowercase</button>
+        <button class="btn btn-primary mx-1" onclick="handleClearClick()">Clear Text</button>
+        <button class="btn btn-primary mx-1" onclick="handleCopy()">Copy Text</button>
+        <button class="btn btn-primary mx-1" onclick="handleExtraSpaces()">Remove Extra Spaces</button>
+    </div>
+    <div class="container my-3">
+        <h2>Your Text Summary</h2>
+        <p><strong>Word Count:</strong> <span id="summary-word-count">0</span> words</p>
+        <p><strong>Character Count:</strong> <span id="summary-char-count">0</span> characters</p>
+        <p><strong>Reading Time:</strong> <span id="summary-reading-time">0</span> minutes</p>
+        <h2>Preview</h2>
+        <p id="preview">Enter something in the textbox above to preview it here</p>
+    </div>
+{% endif %}
+
+{% if error_message %}
+    <div class="container">
         <p style="color: red;">{{ error_message }}</p>
-    {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Convert to Uppercase
+    function handleUpClick() {
+        var text = document.getElementById("myBox").value;
+        var transformedText = text.toUpperCase();
+        document.getElementById("myBox").value = transformedText;
+        updateSummary(transformedText);
+        updatePreview(transformedText);
+    }
+
+    // Convert to Lowercase
+    function handleLoClick() {
+        var text = document.getElementById("myBox").value;
+        var transformedText = text.toLowerCase();
+        document.getElementById("myBox").value = transformedText;
+        updateSummary(transformedText);
+        updatePreview(transformedText);
+    }
+    
+    // Clear Text
+    function handleClearClick() {
+        document.getElementById("myBox").value = "";
+        updateSummary("");
+        updatePreview("");
+    }
+
+    // Copy Text
+    function handleCopy() {
+        var text = document.getElementById("myBox").value;
+        navigator.clipboard.writeText(text);
+    }
+
+    // Remove Extra Spaces
+    function handleExtraSpaces() {
+        var text = document.getElementById("myBox").value;
+        var transformedText = text.replace(/\s+/g, ' ').trim();
+        document.getElementById("myBox").value = transformedText;
+        updateSummary(transformedText);
+        updatePreview(transformedText);
+    }
+
+    // Update text summary
+    function updateSummary(text) {
+        // ... Your summary calculation code ...
+    }
+
+    // Update text preview
+    function updatePreview(text) {
+        document.getElementById("preview").textContent = text;
+    }
+
+    // ... Your event listeners and other functions ...
+
+    // Initialize the textarea size adjustment
+    function adjustTextareaSize() {
+        var textarea = document.getElementById("myBox");
+        textarea.style.height = "auto";
+        textarea.style.height = (textarea.scrollHeight) + "px";
+    }
+
+    // Call the adjustTextareaSize function when the page loads
+    window.addEventListener("load", adjustTextareaSize);
+
+    // ... Your JavaScript functions here ...
+
+    // Update text summary
+    function updateSummary(text) {
+        let words = text.split(" ").filter(word => word.trim() !== "");
+        let characters = text.length;
+        let minutes = (0.008 * words.length).toFixed(2);
+
+        document.getElementById("summary-word-count").textContent = words.length;
+        document.getElementById("summary-char-count").textContent = characters;
+        document.getElementById("summary-reading-time").textContent = minutes;
+    }
+
+    // Call updateSummary function when the textarea content changes
+    document.getElementById("myBox").addEventListener("input", function () {
+        let newText = this.value;
+        updateSummary(newText);
+        updatePreview(newText);
+    });
+
+    // Initialize the textarea size adjustment
+    adjustTextareaSize();
+</script>
 {% endblock %}
