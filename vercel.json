@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "OCR/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "OCR/wsgi.py"
+      }
+    ]
+}

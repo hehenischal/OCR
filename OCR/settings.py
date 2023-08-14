@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 from api_keys import SECRET_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -78,8 +79,13 @@ WSGI_APPLICATION = 'OCR.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'URL': os.getenv('POSTGRES_URL'),
+        'NAME': os.getenv('PGNAME'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT'),
     }
 }
 
