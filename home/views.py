@@ -2,6 +2,7 @@ import requests
 from django.shortcuts import render
 from api_keys import API_KEY
 from .forms import ImageForm
+import os
 
 def index(request):
     if request.method == 'POST':
@@ -13,7 +14,7 @@ def index(request):
                 ('', (image.name, image.file, image.content_type))
             ]
             headers = {
-                'apikey': API_KEY,
+                'apikey': os.getenv('API_KEY'),
             }
             response = requests.post(url, headers=headers, data=payload, files=files)
             
