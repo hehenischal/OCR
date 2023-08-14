@@ -3,70 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesseract OCR App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            overflow-x: hidden;
-            overflow-y: scroll;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 1rem;
-        }
-        main {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-        }
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #333;
-            position: absolute;
-            {% comment %} top:100%; {% endcomment %}
-            width: 100%;
-            color: #fff;
-        }
-        form {
-            margin-bottom: 1rem;
-        }
-        button {
-            padding: 0.5rem 1rem;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        pre {
-            white-space: pre-wrap;
-            background-color: #f5f5f5;
-            padding: 1rem;
-            border-radius: 5px;
-        }
-    </style>
+    <title>Your App Title</title>
+    <!-- Your CSS links and other head content here -->
 </head>
-<body>
+<style> 
+    header {
+        color: white;
+        background-color: #333;
+        padding: 10px;
+        text-align: center;
+    }
+
+    footer {
+        color: white;
+        background-color: #333;
+        padding: 10px;
+        text-align: center;
+    }
+    main {
+        padding: 10px;
+        background-color: #f1f1f1;
+        border: 1px solid black;
+    }
+</style>
+<body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0;">
     <header>
-        <h1> OCR Api</h1>
+        <a href={% url 'home' %}><p> OCR App </p></a>
     </header>
-    <main>
-        <div>
-            {% block content %}
-            {% endblock %}
-        </div>
+    
+    <main style="flex: 1;">
+        {% block content %}{% endblock %}
     </main>
+    
     <footer>
-        <p>&copy; {{ year }} OCR App</p>
+        <a href={% url 'home' %}>&copy; Nischal</a>
     </footer>
     {% block scripts %}{% endblock scripts %}
 </body>
-
+</html>

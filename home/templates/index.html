@@ -1,16 +1,40 @@
 {% extends "base.html" %}
-
 <style>
     .container {
         max-width: 800px;
         margin: auto;
     }
-    textarea {
-        width: 800px;
+    .image-container {
+        position: relative;
+        display: inline-block;
     }
-    img {
-        width: 800px;
+    .uploaded-image {
+        max-width: 100%;
     }
+    .crop-overlay {
+        position: absolute;
+        border: 2px dashed #fff;
+        pointer-events: none;
+    }
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .uploaded-image {
+        max-width: 100%;
+    }
+    
+    .crop-overlay {
+        position: absolute;
+        top: 20%; /* Adjust this based on the OCR results */
+        left: 20%; /* Adjust this based on the OCR results */
+        width: 60%; /* Adjust this based on the OCR results */
+        height: 60%; /* Adjust this based on the OCR results */
+        border: 2px dashed #fff;
+        pointer-events: none; /* Prevent the overlay from interfering with interactions */
+    }
+    
 </style>
 
 {% block content %}
@@ -24,13 +48,20 @@
         </form>
     </div>
 {% endif %}
+{% if extracted_text %}
+    
+    <!-- Rest of your code... -->
+{% endif %}
 
 {% if extracted_text %}
     <div class="container">
         <h3>Extracted Text:</h3>
-        <img src={{ form.image.url }} alt={{form.image.url}} width="500" height="200">
-        <p> image url : {{form.image.url}} </p>
-        
+        <div class="image-container">
+            <img src="{{ form.image.url }}" alt="Uploaded Image" class="uploaded-image">
+            <div class="crop-overlay" style="left: {{ overlay_left }}px; top: {{ overlay_top }}px; width: {{ overlay_width }}px; height: {{ overlay_height }}px;"></div>
+
+        </div>
+        <p><strong>Image URL:</strong> {{ form.image.url }}</p>
     </div>
     <div class="container">
         <h1>Text Form</h1>
@@ -60,71 +91,46 @@
 {% endif %}
 {% endblock %}
 
+
 {% block scripts %}
-<script>
-    // Convert to Uppercase
+<script >
+    // Convert text to uppercase
     function handleUpClick() {
-        var text = document.getElementById("myBox").value;
-        var transformedText = text.toUpperCase();
-        document.getElementById("myBox").value = transformedText;
-        updateSummary(transformedText);
-        updatePreview(transformedText);
+        let text = document.getElementById("myBox").value;
+        document.getElementById("myBox").value = text.toUpperCase();
+        updateSummary(text.toUpperCase());
+        updatePreview(text.toUpperCase());
     }
 
-    // Convert to Lowercase
+    // Convert text to lowercase
     function handleLoClick() {
-        var text = document.getElementById("myBox").value;
-        var transformedText = text.toLowerCase();
-        document.getElementById("myBox").value = transformedText;
-        updateSummary(transformedText);
-        updatePreview(transformedText);
+        let text = document.getElementById("myBox").value;
+        document.getElementById("myBox").value = text.toLowerCase();
+        updateSummary(text.toLowerCase());
+        updatePreview(text.toLowerCase());
     }
-    
-    // Clear Text
+
+    // Clear text in the textarea
     function handleClearClick() {
         document.getElementById("myBox").value = "";
         updateSummary("");
         updatePreview("");
     }
 
-    // Copy Text
+    // Copy text from textarea to clipboard
     function handleCopy() {
-        var text = document.getElementById("myBox").value;
+        let text = document.getElementById("myBox").value;
         navigator.clipboard.writeText(text);
     }
 
-    // Remove Extra Spaces
+    // Remove extra spaces
     function handleExtraSpaces() {
-        var text = document.getElementById("myBox").value;
-        var transformedText = text.replace(/\s+/g, ' ').trim();
-        document.getElementById("myBox").value = transformedText;
-        updateSummary(transformedText);
-        updatePreview(transformedText);
+        let text = document.getElementById("myBox").value;
+        text = text.replace(/\s+/g, " ").trim();
+        document.getElementById("myBox").value = text;
+        updateSummary(text);
+        updatePreview(text);
     }
-
-    // Update text summary
-    function updateSummary(text) {
-        // ... Your summary calculation code ...
-    }
-
-    // Update text preview
-    function updatePreview(text) {
-        document.getElementById("preview").textContent = text;
-    }
-
-    // ... Your event listeners and other functions ...
-
-    // Initialize the textarea size adjustment
-    function adjustTextareaSize() {
-        var textarea = document.getElementById("myBox");
-        textarea.style.height = "auto";
-        textarea.style.height = (textarea.scrollHeight) + "px";
-    }
-
-    // Call the adjustTextareaSize function when the page loads
-    window.addEventListener("load", adjustTextareaSize);
-
-    // ... Your JavaScript functions here ...
 
     // Update text summary
     function updateSummary(text) {
@@ -138,6 +144,15 @@
     }
 
     // Call updateSummary function when the textarea content changes
+    function updatePreview(text) {
+        document.getElementById("preview").textContent = text;
+    }
+    updatePreview(document.getElementById("myBox").value);
+    updateSummary(document.getElementById("myBox").value);
+
+    // ... Rest of your functions ...
+
+    // Call updatePreview function when the textarea content changes
     document.getElementById("myBox").addEventListener("input", function () {
         let newText = this.value;
         updateSummary(newText);
@@ -145,6 +160,18 @@
     });
 
     // Initialize the textarea size adjustment
+    
+    
+    function adjustTextareaSize() {
+        let textarea = document.getElementById("myBox");
+        textarea.style.height = "auto";
+        textarea.style.width = "auto";
+        textarea.style.height = (textarea.scrollHeight) + "px";
+        textarea.style.width = (textarea.scrollWidth) + "px";
+    }
     adjustTextareaSize();
+    // Call adjustTextareaSize() function when the window is resized
+    window.addEventListener("resize", adjustTextareaSize);
 </script>
 {% endblock %}
+
