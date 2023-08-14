@@ -1,6 +1,5 @@
 import requests
 from django.shortcuts import render
-from api_keys import API_KEY
 from .forms import ImageForm
 import os
 
