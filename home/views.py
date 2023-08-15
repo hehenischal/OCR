@@ -12,6 +12,7 @@ def index(request):
             files = [
                 ('', (image.name, image.file, image.content_type))
             ]
+            
             headers = {
                 'apikey': os.getenv('API_KEY'),
             }
