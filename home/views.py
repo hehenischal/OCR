@@ -2,6 +2,11 @@ import requests
 from django.shortcuts import render
 from .forms import ImageForm
 import os
+from .models import Image
+from api_keys import API_KEY
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import imageserializer
 
 def index(request):
     if request.method == 'POST':
@@ -12,7 +17,7 @@ def index(request):
             files = [
                 ('', (image.name, image.file, image.content_type))
             ]
-            
+
             headers = {
                 'apikey': os.getenv('API_KEY'),
             }
@@ -26,38 +31,13 @@ def index(request):
                 extracted_text = parsed_results[0].get('ParsedText', 'No text found!')
                 text_overlay = parsed_results[0].get('TextOverlay', {})
                 lines = text_overlay.get('Lines', [])
-            
-                if lines:
-                    # Calculate the bounding box of the detected text
-                    x_coords = [line['Words'][0]['Left'] for line in lines]
-                    y_coords = [line['Words'][0]['Top'] for line in lines]
-                    min_x = min(x_coords)
-                    max_x = max(x_coords)
-                    min_y = min(y_coords)
-                    max_y = max(y_coords)
-                
-                    # Calculate overlay position and size based on bounding box
-                    overlay_left = min_x
-                    overlay_top = min_y
-                    overlay_width = max_x - min_x
-                    overlay_height = max_y - min_y
-                
-                    context['overlay_left'] = overlay_left
-                    context['overlay_top'] = overlay_top
-                    context['overlay_width'] = overlay_width
-                    context['overlay_height'] = overlay_height
             else:
                 extracted_text = 'No text found!'
             
-            form = ImageForm(request.POST, request.FILES)
+            
             if form.is_valid():
-                image = form.cleaned_data['image']
-                print("form is valid & image size is" + 
-                      str(image.size) + "it's name is " + 
-                      image.name + "and it's content type is " + 
-                      image.content_type + "it's location is " + 
-                      str(image.file))
-                form.save()
+                imag = Image.objects.create(image = image)
+                imag.save()
             
             context = {
                 'extracted_text': extracted_text,
@@ -71,3 +51,29 @@ def index(request):
         'form': form
     }
     return render(request, 'index.html', context)
+
+@api_view(['GET'])
+def api_get(request):
+    data = {
+        'status': '200',
+        'message': 'success',
+        'data': 'successfully hit the api endpoint',
+    }
+    return Response(data)
+
+
+@api_view(['POST'])
+def api_post(request):
+    image = request.FILES.get('image')
+    imag = Image.objects.create(image = image)
+    imag.save()
+    url = "https://api.ocr.space/parse/image"
+    payload = {}
+    files = [
+        ('', (image.name, image.file, image.content_type))
+    ]
+    headers = {
+        'apikey': os.getenv('API_KEY'),
+    }
+    response = requests.post(url, headers=headers, data=payload, files=files)
+    data = response.json()
