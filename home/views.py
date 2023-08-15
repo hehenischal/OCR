@@ -61,6 +61,7 @@ def index(request):
             context = {
                 'extracted_text': extracted_text,
                 'form' : form,
+                'image': image,
             }
             return render(request, 'index.html', context)
 
