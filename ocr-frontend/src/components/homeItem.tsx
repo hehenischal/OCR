@@ -1,9 +1,23 @@
 'use client'
-import React from "react";
+import React,{useState} from "react";
 
 const HomeItem = () => {
+    const [file, setFile] = useState(null)
+
+    const postOcr = ()=>{
+      
+    }
     const handleSubmit=((e:any)=>{
         e.preventDefault()
+      console.log(file);
+      
+        
+    })
+
+    const handleChange=((e:any)=>{
+       
+        setFile(e.target.files[0])
+         console.log("uploading");
     })
   return (
     <>
@@ -28,6 +42,7 @@ const HomeItem = () => {
                   id="image"
                   name="image"
                   accept=".png,.jpg,.jpeg"
+                  onChange={handleChange}
                   className="w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 px-3 py-[0.32rem]  font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem]  file:border-0 file:border-solid file:border-inherit file:bg-gray-300 hover:file:bg-gray-400   file:px-3 file:py-[0.32rem] file:text-neutral-700 hover:file:text-neutral-100 file:transition file:duration-300 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem]"
                 />
               </div>
