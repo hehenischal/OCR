@@ -50,30 +50,42 @@ def index(request):
     context = {
         'form': form
     }
-    return render(request, 'index.html', context)
+    return render(request, 'index.html', context)   
 
-@api_view(['GET'])
-def api_get(request):
-    data = {
+
+@api_view(['POST', 'GET'])
+def api_post(request):
+    if request.method == 'GET':
+        data = {
         'status': '200',
         'message': 'success',
         'data': 'successfully hit the api endpoint',
-    }
-    return Response(data)
-
-
-@api_view(['POST'])
-def api_post(request):
-    image = request.FILES.get('image')
-    imag = Image.objects.create(image = image)
-    imag.save()
-    url = "https://api.ocr.space/parse/image"
-    payload = {}
-    files = [
-        ('', (image.name, image.file, image.content_type))
-    ]
-    headers = {
-        'apikey': os.getenv('API_KEY'),
-    }
-    response = requests.post(url, headers=headers, data=payload, files=files)
-    data = response.json()
+        }
+        return Response(data)
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        url = "https://api.ocr.space/parse/image"
+        payload = {}
+        files = [
+            ('', (image.name, image.file, image.content_type))
+        ]
+        headers = {
+            'apikey': os.getenv('API_KEY'),
+        }
+        response = requests.post(url, headers=headers, data=payload, files=files)
+        data = response.json()
+        parsed_results = data.get('ParsedResults', [])
+        if parsed_results:
+            extracted_text = parsed_results[0].get('ParsedText', 'No text found!')
+        context={   
+            'status': '200',
+            'message': 'success',
+            'data': extracted_text,
+        }   
+        if image:
+            imag = Image.objects.create(image = image)
+            imag.save()
+            allimages= Image.objects.all()
+            serializer = imageserializer(allimages, many=True)
+            context['images'] = serializer.data
+        return Response(context)
