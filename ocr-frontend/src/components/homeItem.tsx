@@ -34,8 +34,8 @@ const HomeItem = () => {
                   htmlFor="image"
                 >
                   Choose an image
-                  <span className=" text-red-500 font-sans">*</span>(PNG or
-                  JPEG)
+                 (PNG or
+                  JPEG) <span className="text-red-500 font-sans">*</span>
                 </label>
                 <input
                   type="file"
