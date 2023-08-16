@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from .serializers import imageserializer
 
 def index(request):
+    form = ImageForm()
     if request.method == 'POST':
         
             image = request.FILES.get('image')
@@ -45,7 +46,7 @@ def index(request):
             }
             return render(request, 'index.html', context)
 
-    form = ImageForm()
+    
     context = {
         'form': form
     }
