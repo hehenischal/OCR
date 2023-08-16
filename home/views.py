@@ -3,7 +3,6 @@ from django.shortcuts import render
 from .forms import ImageForm
 import os
 from .models import Image
-from api_keys import API_KEY
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import imageserializer
