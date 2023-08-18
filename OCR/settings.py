@@ -59,16 +59,15 @@ MIDDLEWARE = [
     
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
 
-#CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS = [
+    '*',
 #    "https://example.com",
 #    "https://sub.example.com",
 #    "http://localhost:8080",
 #    "http://
-#]
+]
 
-CORS_ALLOW_CREDENTIALS = True
 
 
 ROOT_URLCONF = 'OCR.urls'
