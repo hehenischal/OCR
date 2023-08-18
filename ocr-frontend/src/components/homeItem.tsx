@@ -1,29 +1,62 @@
-'use client'
-import React,{useState} from "react";
+"use client";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
+interface PostResponseData {
+  data: string; // You can specify other properties if needed
+}
 const HomeItem = () => {
-    const [file, setFile] = useState(null)
+  const [file, setFile] = useState("");
+  const [postResponseData, setPostResponseData] = useState<PostResponseData>({
+    data: "",
+  });
 
-    const postOcr = ()=>{
-      
+  const postOcr = async () => {
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const response = await axios.post(
+        "https://ocr.nischallamichhane.com.np/api",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      const responseData = response.data;
+      setPostResponseData(responseData);
+   
+      // console.log(responseData);
+    } catch (error: unknown) {
+      console.log(error);
     }
-    const handleSubmit=((e:any)=>{
-        e.preventDefault()
-      console.log(file);
-      
-        
-    })
+  };
 
-    const handleChange=((e:any)=>{
-       
-        setFile(e.target.files[0])
-         console.log("uploading");
-    })
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    // console.log(file);
+    postOcr();
+   
+  };
+
+  const handleChange = (e: any) => {
+    setFile(e.target.files[0]);
+  };
+
+  // const fetchOcr = async() => {
+  //   const res =await axios.get( "https://ocr.nischallamichhane.com.np/api",{ headers: { "Content-Type": "applocation/json" } })
+  //   console.log(res);
+  //  const dataResponse:any = res.data
+  //  if (Array.isArray(dataResponse.dataArray)) {
+  //   setFetchData(dataResponse.dataArray);
+  // }
+  // }
+  // useEffect(()=>{
+  //   fetchOcr()
+  // },[])
   return (
     <>
-      <section className="bg-gray-100">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="max-w-md w-full p-6 bg-white rounded-md shadow-md">
+      <section className="bg-gray-100 min-h-screen">
+        <section className="bg-gray-100 flex items-center justify-center h-[100vh] flex-col">
+          <div className="max-w-md w-full p-6 bg-white rounded-md shadow-md ">
             <h2 className="text-2xl font-semibold mb-4 text-center">
               Upload Image
             </h2>
@@ -33,15 +66,14 @@ const HomeItem = () => {
                   className="block text-gray-700 text-sm font-medium mb-2"
                   htmlFor="image"
                 >
-                  Choose an image
-                 (PNG or
-                  JPEG)<sup className="text-red-500">*</sup>
+                  Choose an image (PNG or JPEG)
+                  <sup className="text-red-500">*</sup>
                 </label>
                 <input
                   type="file"
                   id="image"
                   name="image"
-                  accept=".png,.jpg,.jpeg"
+                  accept=".png,.jpg,.jpeg,.pdf"
                   onChange={handleChange}
                   className="w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 px-3 py-[0.32rem]  font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem]  file:border-0 file:border-solid file:border-inherit file:bg-gray-300 hover:file:bg-gray-400   file:px-3 file:py-[0.32rem] file:text-neutral-700 hover:file:text-neutral-100 file:transition file:duration-300 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] file:cursor-pointer cursor-pointer"
                 />
@@ -54,7 +86,20 @@ const HomeItem = () => {
               </button>
             </form>
           </div>
-        </div>
+          <div className=" mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-md">
+            {postResponseData.data && (
+              <>
+                {postResponseData.data
+                  .split("\r\n")
+                  .map((line: any, index: number) => (
+                    <p key={index}>{line}</p>
+                  ))}
+              </>
+            )}
+          </div>
+        </section>
+
+        <section className="flex flex-col items-center "></section>
       </section>
     </>
   );
