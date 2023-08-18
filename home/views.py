@@ -82,10 +82,4 @@ def api_post(request):
             'message': 'success',
             'data': extracted_text,
         }   
-        if image:
-            imag = Image.objects.create(image = image)
-            imag.save()
-            allimages= Image.objects.all()
-            serializer = imageserializer(allimages, many=True)
-            context['images'] = serializer.data
         return Response(context)
