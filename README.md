@@ -1,6 +1,7 @@
 # OCR 
 ### Optical Character Recognition
-- by [**@hehenischal**](https://github.com/hehenischal)
+- [**@hehenischal**](https://github.com/hehenischal)
+- [**@saagarbhujel**](https://github.com/saagarbhujel)
 
 ## What is OCR?
 Optical Character Recognition (OCR) is the process of electronically extracting text from images or any documents like PDF and reusing it in a variety of ways such as full text searches. OCR is a field of research in pattern recognition, artificial intelligence and computer vision.
