@@ -86,10 +86,13 @@ const HomeItem = () => {
               </button>
             </form>
           </div>
-          <div className=" mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-xl">
-            <h3 className="text-2xl mb-4 text-center">
-              Output
-            </h3>
+          <h3 className="text-2xl mb-4 text-center mt-4">Output</h3>
+          <textarea
+            id="message"
+            name="message"
+            rows={4}
+            className=" mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-xl resize-none"
+          >
             {postResponseData.data && (
               <>
                 {postResponseData.data
@@ -99,7 +102,7 @@ const HomeItem = () => {
                   ))}
               </>
             )}
-          </div>
+          </textarea>
         </div>
       </section>
     </>
