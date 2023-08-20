@@ -54,9 +54,9 @@ const HomeItem = () => {
   // },[])
   return (
     <>
-      <section className="bg-gray-100 min-h-screen">
-        <section className="bg-gray-100 flex items-center justify-center h-[100vh] flex-col">
-          <div className="max-w-md w-full p-6 bg-white rounded-md shadow-md ">
+      <section className="bg-white">
+        <div className=" flex items-center justify-center h-[90vh] flex-col overflow-hidden">
+          <div className="max-w-md w-full p-6 bg-white rounded-md shadow-xl ">
             <h2 className="text-2xl font-semibold mb-4 text-center">
               Upload Image
             </h2>
@@ -86,7 +86,10 @@ const HomeItem = () => {
               </button>
             </form>
           </div>
-          <div className=" mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-md">
+          <div className=" mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-xl">
+            <h3 className="text-2xl mb-4 text-center">
+              Output
+            </h3>
             {postResponseData.data && (
               <>
                 {postResponseData.data
@@ -97,9 +100,7 @@ const HomeItem = () => {
               </>
             )}
           </div>
-        </section>
-
-        <section className="flex flex-col items-center "></section>
+        </div>
       </section>
     </>
   );
