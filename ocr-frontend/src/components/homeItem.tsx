@@ -91,18 +91,10 @@ const HomeItem = () => {
             id="message"
             name="message"
             rows={4}
-            className=" mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-xl resize-none"
-          >
-            {postResponseData.data && (
-              <>
-                {postResponseData.data
-                  .split("\r\n")
-                  .map((line: any, index: number) => (
-                    <p key={index}>{line}</p>
-                  ))}
-              </>
-            )}
-          </textarea>
+            className="mt-4 max-w-md w-full p-6 bg-white rounded-md shadow-xl resize-none"
+            value={postResponseData.data || ""}
+            readOnly
+          />
         </div>
       </section>
     </>
