@@ -36,5 +36,29 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 - Open the browser and go to http://localhost:8000/
+- Login with your super user credentials
+
+# API Documentations
+
+## API endpoints
+[https://ocr.nischallamichhane.com.np/api](https://ocr.nischallamichhane.com.np/api)
+
+
+## API request methods
+- POST
+- GET
+
+## API request parameters
+**image** *{required for POST}*
+
+#   About the project: 
+This is a hobby project made using django as the framework, and next.js as the frontend. The project is hosted on a Vercel. The project is made to learn about OCR and how it works with API from OCR space. 
+@saagarbhujel has done all the work on the next.js frontend. His code is on the OCR-front branch. the backend code is on the main branch(django templtes frontend is also there). I didnt originally intend to make API. When I was making the project, I thought it would be cool to make an API for the project(and also the frontend required it). So I made it. I have made the API using django rest framework. The API is hosted on vercel. 
+
+# Contributors: 
+ [**@hehenischal**](https://github.com/hehenischal)
+ [**@saagarbhujel**](https://github.com/saagarbhujel)
+
+
 
 
