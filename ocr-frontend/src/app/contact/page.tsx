@@ -39,7 +39,7 @@ const Contact = () => {
             <textarea
               id="message"
               name="message"
-              rows="4"
+              rows={4}
               className="w-full border rounded px-3 py-2 focus:outline-none  resize-none"
             ></textarea>
           </div>
