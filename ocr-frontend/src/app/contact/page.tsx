@@ -2,10 +2,10 @@ import React from 'react'
 
 const Contact = () => {
   return (
-    <section className="bg-gray-100 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-md w-96">
+    <section className="bg-white h-[90vh] flex items-center justify-center">
+      <div className="bg-white p-8  rounded shadow-2xl w-96">
         <h1 className="text-2xl font-semibold mb-4">Contact Us</h1>
-        <form 
+        <form
           action="https://formsubmit.co/23e2a2832856c4f4bc41ec9c61bb1c58"
           method="POST"
         >
@@ -17,7 +17,8 @@ const Contact = () => {
               type="text"
               id="name"
               name="name"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-400"
+              
+              className="w-full border rounded px-3 py-2 focus:outline-none "
             />
           </div>
           <div className="mb-4">
@@ -28,7 +29,7 @@ const Contact = () => {
               type="email"
               id="email"
               name="email"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-400"
+              className="w-full border rounded px-3 py-2 focus:outline-none "
             />
           </div>
           <div className="mb-4">
@@ -39,7 +40,7 @@ const Contact = () => {
               id="message"
               name="message"
               rows="4"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-400 resize-none"
+              className="w-full border rounded px-3 py-2 focus:outline-none  resize-none"
             ></textarea>
           </div>
           <button
