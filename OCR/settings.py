@@ -30,7 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['.vercel.app','.nischallamichhane.com.np', ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
