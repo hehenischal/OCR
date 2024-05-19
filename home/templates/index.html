@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 <style>
     .container {
         max-width: 800px;
@@ -16,30 +17,11 @@
         border: 2px dashed #fff;
         pointer-events: none;
     }
-    .image-container {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .uploaded-image {
-        max-width: 100%;
-    }
-    
-    .crop-overlay {
-        position: absolute;
-        top: 20%; /* Adjust this based on the OCR results */
-        left: 20%; /* Adjust this based on the OCR results */
-        width: 60%; /* Adjust this based on the OCR results */
-        height: 60%; /* Adjust this based on the OCR results */
-        border: 2px dashed #fff;
-        pointer-events: none; /* Prevent the overlay from interfering with interactions */
-    }
-    
 </style>
 
 {% block content %}
 {% if form %}
-    <div class="container">
+    <div class="container card card-lg d-flex justify-content-center">
         <h2>Upload an Image for OCR</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -48,10 +30,6 @@
         </form>
     </div>
 {% endif %}
-{% if extracted_text %}
-    
-    <!-- Rest of your code... -->
-{% endif %}
 
 {% if extracted_text %}
     <div class="container">
@@ -59,7 +37,6 @@
         <div class="image-container">
             <img src="{{ image.image.url }}" alt="Uploaded Image" class="uploaded-image">
             <div class="crop-overlay" style="left: {{ overlay_left }}px; top: {{ overlay_top }}px; width: {{ overlay_width }}px; height: {{ overlay_height }}px;"></div>
-
         </div>
         <p><strong>Image URL:</strong> {{ image.image.url }}</p>
     </div>
@@ -91,50 +68,50 @@
 {% endif %}
 {% endblock %}
 
-
 {% block scripts %}
-<script >
+<script>
     // Convert text to uppercase
     function handleUpClick() {
-        let text = document.getElementById("myBox").value;
-        document.getElementById("myBox").value = text.toUpperCase();
-        updateSummary(text.toUpperCase());
-        updatePreview(text.toUpperCase());
+        updateTextContent(text => text.toUpperCase());
     }
 
     // Convert text to lowercase
     function handleLoClick() {
-        let text = document.getElementById("myBox").value;
-        document.getElementById("myBox").value = text.toLowerCase();
-        updateSummary(text.toLowerCase());
-        updatePreview(text.toLowerCase());
+        updateTextContent(text => text.toLowerCase());
     }
 
     // Clear text in the textarea
     function handleClearClick() {
-        document.getElementById("myBox").value = "";
-        updateSummary("");
-        updatePreview("");
+        updateTextContent(() => "");
     }
 
     // Copy text from textarea to clipboard
     function handleCopy() {
         let text = document.getElementById("myBox").value;
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Text copied to clipboard");
+        }).catch(err => {
+            console.error("Could not copy text: ", err);
+        });
     }
 
     // Remove extra spaces
     function handleExtraSpaces() {
-        let text = document.getElementById("myBox").value;
-        text = text.replace(/\s+/g, " ").trim();
-        document.getElementById("myBox").value = text;
+        updateTextContent(text => text.replace(/\s+/g, " ").trim());
+    }
+
+    // Update the text content
+    function updateTextContent(modifier) {
+        let textarea = document.getElementById("myBox");
+        let text = modifier(textarea.value);
+        textarea.value = text;
         updateSummary(text);
         updatePreview(text);
     }
 
     // Update text summary
     function updateSummary(text) {
-        let words = text.split(" ").filter(word => word.trim() !== "");
+        let words = text.split(/\s+/).filter(word => word.trim() !== "");
         let characters = text.length;
         let minutes = (0.008 * words.length).toFixed(2);
 
@@ -143,36 +120,33 @@
         document.getElementById("summary-reading-time").textContent = minutes;
     }
 
-    // Call updateSummary function when the textarea content changes
+    // Update text preview
     function updatePreview(text) {
         document.getElementById("preview").textContent = text;
     }
-    updatePreview(document.getElementById("myBox").value);
-    updateSummary(document.getElementById("myBox").value);
 
-    // ... Rest of your functions ...
-
-    // Call updatePreview function when the textarea content changes
-    document.getElementById("myBox").addEventListener("input", function () {
-        let newText = this.value;
-        updateSummary(newText);
-        updatePreview(newText);
-    });
-
-    // Initialize the textarea size adjustment
-    
-    
+    // Adjust textarea size
     function adjustTextareaSize() {
         let textarea = document.getElementById("myBox");
         textarea.style.height = "auto";
-        textarea.style.width = "auto";
+        textarea.style.width = "100%"; // Ensure width fits container
         textarea.style.height = (textarea.scrollHeight) + "px";
-        textarea.style.width = (textarea.scrollWidth) + "px";
     }
-    adjustTextareaSize();
-    // Call adjustTextareaSize() function when the window is resized
+
+    // Initial calls
+    document.addEventListener("DOMContentLoaded", () => {
+        adjustTextareaSize();
+        updatePreview(document.getElementById("myBox").value);
+        updateSummary(document.getElementById("myBox").value);
+    });
+
+    // Event listeners
+    document.getElementById("myBox").addEventListener("input", function () {
+        updateSummary(this.value);
+        updatePreview(this.value);
+        adjustTextareaSize(); // Adjust size on input
+    });
+
     window.addEventListener("resize", adjustTextareaSize);
-    console.log(message)
 </script>
 {% endblock %}
-

@@ -26,7 +26,7 @@ def index(request):
             data = response.json()
             print(data)
             
-            parsed_results = data.get('ParsedResults', [])
+            parsed_results = data.get('ParsedResults', None)
             if parsed_results:
                 extracted_text = parsed_results[0].get('ParsedText', 'No text found!')
                 text_overlay = parsed_results[0].get('TextOverlay', {})
